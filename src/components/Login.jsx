@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../auth/AuthContext'
+import Brand from './Brand'
 
 export default function Login() {
   const { signIn } = useAuth()
@@ -14,6 +15,8 @@ export default function Login() {
   return (
     <div className="login-wrap">
       <form className="card login-card" onSubmit={submit}>
+        <Brand size="lg" />
+        <p className="eyebrow">Clinical data collection</p>
         <h1>Live Behavior Data Tracker</h1>
         <p className="muted">
           Test sign-in. Use dummy data only &mdash; real authentication (SSO) is not set up yet.

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from './auth/AuthContext'
 import Admin from './components/Admin'
+import Brand from './components/Brand'
 import Collect from './components/Collect'
 import Login from './components/Login'
 import Review from './components/Review'
@@ -22,24 +23,33 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="top-bar">
-        <h1>Live Behavior Data Tracker</h1>
-        <nav className="nav">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              className={activeView === tab.id ? 'nav-item selected' : 'nav-item'}
-              onClick={() => setView(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+        <button type="button" className="brand-button" onClick={() => setView('collect')} aria-label="Go to Collect data">
+          <Brand />
+        </button>
+        <div className="product">
+          <span className="eyebrow">Clinical data collection</span>
+          <h1>Live Behavior Data Tracker</h1>
+        </div>
         <div className="user-box">
-          <span>{user.name} <span className="pill">{isAdmin ? 'Admin' : 'User'}</span></span>
-          <button type="button" onClick={signOut}>Sign out</button>
+          <span className="user-name">{user.name}</span>
+          <span className={isAdmin ? 'pill admin' : 'pill'}>{isAdmin ? 'Admin' : 'User'}</span>
+          <button type="button" className="ghost" onClick={signOut}>Sign out</button>
         </div>
       </header>
+
+      <nav className="nav" aria-label="Main">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            className={activeView === tab.id ? 'nav-item selected' : 'nav-item'}
+            aria-current={activeView === tab.id ? 'page' : undefined}
+            onClick={() => setView(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
 
       {!isFirebaseConfigured && (
         <div className="card error-card">

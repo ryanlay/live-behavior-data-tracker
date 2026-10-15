@@ -266,7 +266,7 @@ function SummaryTab({ events, sessionsById }) {
                 <XAxis dataKey="label" tick={{ fontSize: 11 }} />
                 <YAxis allowDecimals={false} />
                 <Tooltip />
-                <Bar dataKey="episodes" name="Episodes" fill="#1f4e79" />
+                <Bar dataKey="episodes" name="Episodes" fill="#f27d00" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -279,7 +279,7 @@ function SummaryTab({ events, sessionsById }) {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="durationMin" name="Duration (min)" fill="#c0762b" />
+                <Bar dataKey="durationMin" name="Duration (min)" fill="#1f2937" />
               </BarChart>
             </ResponsiveContainer>
           </div>
