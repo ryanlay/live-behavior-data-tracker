@@ -184,6 +184,8 @@ function SummaryTab({ events, sessionsById }) {
     return [...map.values()].sort((a, b) => naturalSort(a.subject, b.subject) || naturalSort(a.behavior, b.behavior))
   }, [events])
 
+  const intervalPct = (counts) => (counts.total ? Math.round((counts.yes / counts.total) * 100) : null)
+
   const [chartKey, setChartKey] = useState('')
   const chartGroup = groups.find((group) => group.key === chartKey) || groups[0]
 
@@ -203,10 +205,23 @@ function SummaryTab({ events, sessionsById }) {
           label: fmtDateTime(startedAt),
           episodes: stats.episodes,
           durationMin: Number((stats.durations.reduce((a, b) => a + b, 0) / 60000).toFixed(2)),
+          partialPct: intervalPct(stats.intervals.partial),
+          wholePct: intervalPct(stats.intervals.whole),
+          mtsPct: intervalPct(stats.intervals.mts),
+          intensity: avg(stats.intensities) === null ? null : Number(avg(stats.intensities).toFixed(2)),
+          successPct: stats.attempts ? Math.round((stats.successes / stats.attempts) * 100) : null,
         }
       })
       .sort((a, b) => a.startedAt - b.startedAt)
   }, [chartGroup, sessionsById])
+
+  const intervalSeries = [
+    { key: 'partialPct', name: 'Partial interval %', fill: '#f27d00' },
+    { key: 'wholePct', name: 'Whole interval %', fill: '#1f2937' },
+    { key: 'mtsPct', name: 'MTS %', fill: '#9ca3af' },
+  ].filter((series) => chartData.some((row) => row[series.key] !== null))
+  const hasIntensity = chartData.some((row) => row.intensity !== null)
+  const hasSuccess = chartData.some((row) => row.successPct !== null)
 
   if (!groups.length) return <p className="muted">No data matches the current filters.</p>
 
@@ -283,6 +298,51 @@ function SummaryTab({ events, sessionsById }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          {intervalSeries.length > 0 && (
+            <div className="chart">
+              <h4>Interval recording per session (% of intervals with behavior)</h4>
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+                  <YAxis domain={[0, 100]} unit="%" />
+                  <Tooltip />
+                  <Legend />
+                  {intervalSeries.map((series) => (
+                    <Bar key={series.key} dataKey={series.key} name={series.name} fill={series.fill} />
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+          {hasIntensity && (
+            <div className="chart">
+              <h4>Average intensity per session</h4>
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="intensity" name="Avg intensity" fill="#f27d00" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+          {hasSuccess && (
+            <div className="chart">
+              <h4>Trial success rate per session (%)</h4>
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+                  <YAxis domain={[0, 100]} unit="%" />
+                  <Tooltip />
+                  <Bar dataKey="successPct" name="Success rate %" fill="#15803d" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
       </div>
     </div>
