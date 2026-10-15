@@ -1,0 +1,28 @@
+rules_version = '2';
+
+// ============================================================================
+// TEST-ONLY RULES. Anyone on the internet who has the project config can read
+// and write all data. Use dummy data only.
+//
+// TODO (before real data): require Firebase Auth (Microsoft SSO, @tcfd.org),
+// look up the signed-in user's role in an Admin-managed `users` collection, and
+//   - subjects: read for any signed-in user, write only for role == 'admin'
+//   - sessions/events: create/read for any signed-in user, update/delete admin
+// ============================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /subjects/{subjectId} {
+      allow read, write: if true;
+    }
+
+    match /sessions/{sessionId} {
+      allow read, write: if true;
+    }
+
+    // Matches sessions/{id}/events/{id} and collection-group queries on "events".
+    match /{path=**}/events/{eventId} {
+      allow read, write: if true;
+    }
+  }
+}

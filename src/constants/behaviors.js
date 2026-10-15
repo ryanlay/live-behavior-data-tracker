@@ -1,0 +1,23 @@
+// Validated list of target behaviors (same list used by the Lab School database).
+export const TARGET_BEHAVIORS = [
+  'Aggression',
+  'Self-injury',
+  'Elopement',
+  'Pica',
+  'Disruptive Behaviors',
+  'Mouthing',
+  'Impulsivity',
+  'Agitation',
+  'Refusal Behavior',
+  'Off-Task Behavior',
+  'Property Destruction',
+  'Ritualistic Behavior',
+  'Unsanitary Behavior',
+  'Sensory Stimulation',
+  'Stereotypy/Repetitive Behavior',
+  'Inappropriate Social Behavior',
+  'Inappropriate Touch',
+  'Sexually Inappropriate Behavior',
+  'Disrobing',
+  'Food Stealing',
+]
